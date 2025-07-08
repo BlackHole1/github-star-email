@@ -116,7 +116,9 @@ async function execute(params: Inputs, context: Context<Inputs, Outputs>) {
             })
         });
 
-        await appendFile(params.saveAs, `${data.join("\n")}\n`, "utf8");
+        if (data.length !== 0) {
+            await appendFile(params.saveAs, `${data.join("\n")}\n`, "utf8");
+        }
 
         after = pageInfo.endCursor;
         hasNextPage = pageInfo.hasNextPage;
