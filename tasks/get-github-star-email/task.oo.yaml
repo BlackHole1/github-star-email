@@ -1,0 +1,39 @@
+ui:
+  default_width: 450
+inputs_def:
+  - handle: owner
+    json_schema:
+      type: string
+  - handle: repo
+    json_schema:
+      type: string
+  - handle: githubToken
+    json_schema:
+      contentMediaType: oomol/secret
+      type: string
+  - handle: saveAs
+    json_schema:
+      type: string
+      ui:widget: save
+      ui:options:
+        excludeAll: true
+        filters:
+          - name: Newline Delimited JSON
+            extensions:
+              - ndjson
+  - handle: continue
+    json_schema:
+      type: boolean
+    value: true
+outputs_def:
+  - handle: output
+    json_schema:
+      type: string
+      ui:widget: file
+executor:
+  name: nodejs
+  options:
+    entry: main.ts
+    spawn: false
+icon: ":skill-icons:typescript:"
+title: Get Github Star Email
