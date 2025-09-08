@@ -2,16 +2,20 @@ ui:
   default_width: 450
 inputs_def:
   - handle: owner
+    description: "GitHub repository owner (username or organization name)"
     json_schema:
       type: string
   - handle: repo
+    description: "GitHub repository name"
     json_schema:
       type: string
   - handle: githubToken
+    description: "GitHub Personal Access Token with 'read:user' permission"
     json_schema:
       contentMediaType: oomol/secret
       type: string
   - handle: saveAs
+    description: "Output file path to save extracted email addresses (.ndjson format)"
     json_schema:
       type: string
       ui:widget: save
@@ -22,11 +26,14 @@ inputs_def:
             extensions:
               - ndjson
   - handle: continue
+    description: "Enable resume functionality to continue from where it left off if
+      interrupted"
     json_schema:
       type: boolean
     value: true
 outputs_def:
   - handle: output
+    description: "Path to the generated file containing stargazer email addresses"
     json_schema:
       type: string
       ui:widget: file
@@ -35,5 +42,10 @@ executor:
   options:
     entry: main.ts
     spawn: false
-icon: ":skill-icons:typescript:"
+icon: ":twemoji:glowing-star:"
 title: Get Github Star Email
+description: "Extracts email addresses from all users who have starred a
+  specific GitHub repository. Uses GitHub's GraphQL API to efficiently fetch
+  stargazer data and saves the results in NDJSON format. Features include smart
+  rate limiting, resume capability for large repositories, real-time progress
+  reporting, and automatic email filtering to respect user privacy."

@@ -1,4 +1,4 @@
-version: 0.0.2
+version: 0.0.3
 scripts:
   # Script executed when the container is first loaded
   # eg: bootstrap: poetry add pandas
@@ -13,3 +13,4 @@ description: Extract the email addresses of all users who have starred the
 displayName: Github Star Email
 repository: https://github.com/BlackHole1/github-star-email
 icon: ":simple-icons:github:#7494A3:"
+releaseNotes: add layer
