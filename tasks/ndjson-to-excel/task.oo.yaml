@@ -2,7 +2,7 @@ ui:
   default_width: 450
 inputs_def:
   - handle: ndjsonPath
-    description: "Path to the input NDJSON file"
+    description: "%path-to-the-input-ndjson-file2%"
     json_schema:
       type: string
       ui:widget: file
@@ -12,12 +12,12 @@ inputs_def:
             extensions:
               - ndjson
   - handle: sheetName
-    description: "Name of the Excel sheet"
+    description: "%name-of-the-excel-sheet%"
     json_schema:
       type: string
-    value: "Sheet1"
+    value: Sheet1
   - handle: saveAs
-    description: "Output file path for the Excel file"
+    description: "%output-file-path-for-the-excel-file%"
     json_schema:
       type: string
       ui:widget: save
@@ -27,11 +27,11 @@ inputs_def:
           - name: Excel Workbook
             extensions:
               - xlsx
-    nullable: true
     value: null
+    nullable: true
 outputs_def:
   - handle: output
-    description: "Path to the generated Excel file"
+    description: "%path-to-the-generated-excel-file%"
     json_schema:
       type: string
       ui:widget: file
@@ -41,7 +41,5 @@ executor:
     entry: main.ts
     spawn: false
 icon: ":carbon:table-split:"
-title: NDJSON to Excel
-description: "Converts an NDJSON (Newline Delimited JSON) file to an Excel
-  spreadsheet. Each line in the NDJSON file becomes a row in the spreadsheet
-  with corresponding columns."
+title: "%ndjson-to-excel%"
+description: "%converts-an-ndjson-newline-delimited-json-file-to-an-excel-sprea%"

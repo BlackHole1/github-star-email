@@ -1,6 +1,6 @@
 nodes:
   - node_id: get-github-star-email#1
-    title: "Get Github Star Email #1"
+    title: "%get-github-star-email-1%"
     inputs_from:
       - handle: owner
         value: opendatalab
@@ -14,7 +14,7 @@ nodes:
         value: true
     task: self::get-github-star-email
   - node_id: ndjson-to-excel#1
-    title: "NDJSON to Excel #1"
+    title: "%ndjson-to-excel-1%"
     inputs_from:
       - handle: ndjsonPath
         value: /oomol-driver/oomol-storage/github-email/pdf-mineru.ndjson
@@ -24,7 +24,7 @@ nodes:
         value:
     task: self::ndjson-to-excel
   - node_id: ndjson-to-csv#1
-    title: "NDJSON to CSV #1"
+    title: "%ndjson-to-csv-1%"
     inputs_from:
       - handle: ndjsonPath
         value: /oomol-driver/oomol-storage/github-email/pdf-mineru.ndjson
