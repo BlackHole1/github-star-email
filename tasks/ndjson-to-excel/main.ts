@@ -14,6 +14,37 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join, basename } from "node:path";
 import * as XLSX from "xlsx";
 
+/**
+ * Normalize email addresses by converting common anomalies to proper format
+ */
+function normalizeEmail(email: string): string {
+  if (!email || typeof email !== "string") {
+    return email;
+  }
+
+  return email
+    // [at] -> @
+    .replace(/\[at\]/gi, "@")
+    // (at) -> @
+    .replace(/\(at\)/gi, "@")
+    // " at " -> @
+    .replace(/\s+at\s+/gi, "@")
+    // [dot] -> .
+    .replace(/\[dot\]/gi, ".")
+    // " dot " -> .
+    .replace(/\s+dot\s+/gi, ".")
+    // # -> @
+    .replace(/#/g, "@")
+    // Fix missing @ before domain (e.g., "zhangpanrobotgmail.com" -> "zhangpanrobot@gmail.com")
+    .replace(/([a-z0-9])gmail\.com$/i, "$1@gmail.com")
+    .replace(/([a-z0-9])outlook\.com$/i, "$1@outlook.com")
+    .replace(/([a-z0-9])yahoo\.com$/i, "$1@yahoo.com")
+    .replace(/([a-z0-9])hotmail\.com$/i, "$1@hotmail.com")
+    .replace(/([a-z0-9])163\.com$/i, "$1@163.com")
+    .replace(/([a-z0-9])126\.com$/i, "$1@126.com")
+    .replace(/([a-z0-9])qq\.com$/i, "$1@qq.com");
+}
+
 export default async function(
   params: Inputs,
   context: Context<Inputs, Outputs>
@@ -28,8 +59,19 @@ export default async function(
   const content = await readFile(params.ndjsonPath, "utf8");
   const lines = content.trim().split("\n").filter(line => line.trim() !== "");
 
-  // Parse NDJSON lines into objects
-  const data = lines.map(line => JSON.parse(line));
+  // Parse NDJSON lines into objects and normalize email field
+  const data = lines.map(line => {
+    const obj = JSON.parse(line);
+    // Trim and normalize name field if it exists
+    if (obj.name && typeof obj.name === "string") {
+      obj.name = obj.name.trim();
+    }
+    // Trim and normalize email field if it exists
+    if (obj.email && typeof obj.email === "string") {
+      obj.email = normalizeEmail(obj.email.trim());
+    }
+    return obj;
+  });
 
   if (data.length === 0) {
     throw new Error("No data found in NDJSON file");
