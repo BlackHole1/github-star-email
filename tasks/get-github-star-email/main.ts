@@ -3,7 +3,7 @@ type Inputs = {
   owner: string;
   repo: string;
   githubToken: string;
-  saveAs: string;
+  saveAs: string | null;
   continue: boolean;
 };
 type Outputs = {
@@ -14,7 +14,7 @@ type Outputs = {
 import type { Context } from "@oomol/types/oocana";
 import * as https from "node:https";
 import { appendFile, readFile, rm, stat, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { join } from "node:path";
 
 const GQL = `
 query ($OWNER: String!, $REPO: String!, $AFTER: String) {
@@ -38,15 +38,21 @@ export default async function(
     params: Inputs,
     context: Context<Inputs, Outputs>
 ): Promise<Partial<Outputs> | undefined | void> {
-    await execute(params, context);
-    
+    // Determine output path
+    const outputPath = params.saveAs ?? join(
+        context.sessionDir,
+        `${params.owner}-${params.repo}-stars.ndjson`
+    );
+
+    await execute(params, context, outputPath);
+
     return {
-        output: params.saveAs,
+        output: outputPath,
     }
 };
 
-async function execute(params: Inputs, context: Context<Inputs, Outputs>) {
-    const prevPath = path.join(context.tmpPkgDir, `${params.owner}-${params.repo}-prev.json`);
+async function execute(params: Inputs, context: Context<Inputs, Outputs>, outputPath: string) {
+    const prevPath = join(context.tmpPkgDir, `${params.owner}-${params.repo}-prev.json`);
 
     if (!params.continue) {
         await rm(prevPath, {
@@ -56,7 +62,7 @@ async function execute(params: Inputs, context: Context<Inputs, Outputs>) {
 
     await stat(prevPath)
         .catch(() => {
-            return rm(params.saveAs, {
+            return rm(outputPath, {
                 force: true,
             });
         });
@@ -117,7 +123,7 @@ async function execute(params: Inputs, context: Context<Inputs, Outputs>) {
         });
 
         if (data.length !== 0) {
-            await appendFile(params.saveAs, `${data.join("\n")}\n`, "utf8");
+            await appendFile(outputPath, `${data.join("\n")}\n`, "utf8");
         }
 
         after = pageInfo.endCursor;

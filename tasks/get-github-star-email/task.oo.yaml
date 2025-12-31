@@ -25,6 +25,8 @@ inputs_def:
           - name: Newline Delimited JSON
             extensions:
               - ndjson
+    nullable: true
+    value: null
   - handle: continue
     description: "Enable resume functionality to continue from where it left off if
       interrupted"

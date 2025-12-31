@@ -1,0 +1,56 @@
+ui:
+  default_width: 450
+inputs_def:
+  - handle: ndjsonPath
+    description: "Path to the input NDJSON file"
+    json_schema:
+      type: string
+      ui:widget: file
+      ui:options:
+        filters:
+          - name: Newline Delimited JSON
+            extensions:
+              - ndjson
+  - handle: saveAs
+    description: "Output file path for the CSV file"
+    json_schema:
+      type: string
+      ui:widget: save
+      ui:options:
+        excludeAll: true
+        filters:
+          - name: CSV File
+            extensions:
+              - csv
+    value: null
+    nullable: true
+  - group: Optional
+    collapsed: false
+  - handle: delimiter
+    description: "CSV field delimiter"
+    json_schema:
+      type: string
+    value:
+    nullable: true
+  - handle: includeHeaders
+    description: "Include column headers in the CSV file"
+    json_schema:
+      type: boolean
+    value: true
+    nullable: true
+outputs_def:
+  - handle: output
+    description: "Path to the generated CSV file"
+    json_schema:
+      type: string
+      ui:widget: file
+executor:
+  name: nodejs
+  options:
+    entry: main.ts
+    spawn: false
+icon: ":carbon:document-export:"
+title: NDJSON to CSV
+description: "Converts an NDJSON (Newline Delimited JSON) file to a CSV
+  (Comma-Separated Values) file. Each line in the NDJSON file becomes a row in
+  the CSV with corresponding columns."

@@ -1,0 +1,36 @@
+nodes:
+  - node_id: get-github-star-email#1
+    title: "Get Github Star Email #1"
+    inputs_from:
+      - handle: owner
+        value: opendatalab
+      - handle: repo
+        value: MinerU
+      - handle: githubToken
+        value: ${{OO_SECRET:Custom,github-oomol,api-key}}
+      - handle: saveAs
+        value: /oomol-driver/oomol-storage/github-email/pdf-mineru.ndjson
+      - handle: continue
+        value: true
+    task: self::get-github-star-email
+  - node_id: ndjson-to-excel#1
+    title: "NDJSON to Excel #1"
+    inputs_from:
+      - handle: ndjsonPath
+        value: /oomol-driver/oomol-storage/github-email/pdf-mineru.ndjson
+      - handle: sheetName
+        value: Sheet1
+      - handle: saveAs
+        value:
+    task: self::ndjson-to-excel
+  - node_id: ndjson-to-csv#1
+    title: "NDJSON to CSV #1"
+    inputs_from:
+      - handle: ndjsonPath
+      - handle: saveAs
+        value:
+      - handle: delimiter
+        value: ","
+      - handle: includeHeaders
+        value: true
+    task: self::ndjson-to-csv
