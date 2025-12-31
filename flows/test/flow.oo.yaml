@@ -27,6 +27,7 @@ nodes:
     title: "NDJSON to CSV #1"
     inputs_from:
       - handle: ndjsonPath
+        value: /oomol-driver/oomol-storage/github-email/pdf-mineru.ndjson
       - handle: saveAs
         value:
       - handle: delimiter

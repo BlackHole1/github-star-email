@@ -62,30 +62,35 @@ export default async function(
   // Parse NDJSON lines into objects and normalize email field
   const data = lines.map(line => {
     const obj = JSON.parse(line);
-    // Trim and normalize name field if it exists
+
+    // Split name into first name and last name
+    let firstName = "";
+    let lastName = "";
     if (obj.name && typeof obj.name === "string") {
-      obj.name = obj.name.trim();
+      const nameParts = obj.name.trim().split(/\s+/);
+      firstName = nameParts[0] || "";
+      lastName = nameParts.slice(1).join(" ");
     }
+
     // Trim and normalize email field if it exists
-    if (obj.email && typeof obj.email === "string") {
-      obj.email = normalizeEmail(obj.email.trim());
-    }
-    return obj;
+    const email = obj.email && typeof obj.email === "string"
+      ? normalizeEmail(obj.email.trim())
+      : obj.email;
+
+    // Return new object with first name, last name, and email in order
+    return {
+      "First Name": firstName,
+      "Last Name": lastName,
+      "Email": email,
+    };
   });
 
   if (data.length === 0) {
     throw new Error("No data found in NDJSON file");
   }
 
-  // Collect all unique keys from all objects to form columns
-  const allKeys = new Set<string>();
-  for (const obj of data) {
-    for (const key of Object.keys(obj)) {
-      allKeys.add(key);
-    }
-  }
-
-  const columnHeaders = Array.from(allKeys);
+  // Fixed column headers: First Name, Last Name, Email
+  const columnHeaders = ["First Name", "Last Name", "Email"];
   const delimiter = params.delimiter ?? ",";
   const includeHeaders = params.includeHeaders ?? true;
 
